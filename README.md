@@ -1,54 +1,78 @@
 # Daily Task Manager
 
-A Spring Boot task-management REST API.
+A Spring Boot task-management REST API with a modern web dashboard, connected directly to MySQL and deployable to Render.
 
-## Web interface
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/25ramcharan/daily-task-manager)
 
-Open `http://localhost:8080` for the task dashboard. It supports creating,
-editing, completing, deleting, searching, and filtering tasks. The dashboard
-uses the same `/api/tasks` endpoints as the REST API.
+## GitHub Repository
+[https://github.com/25ramcharan/daily-task-manager](https://github.com/25ramcharan/daily-task-manager)
 
-## Run locally
+---
 
-The application listens on `http://localhost:8080` and uses a local file-based
-H2 database by default. The database file is saved under `data/`, with username
-`admin` and password `root`, so you can start the app without installing or
-configuring MySQL.
+## MySQL Workbench Connection
 
-To use MySQL instead, set up the database and user with an administrator
-account:
+The backend connects directly to your local MySQL 8.0 server.
 
+### Connection Parameters:
+- **Hostname / Host**: `127.0.0.1` (or `localhost`)
+- **Port**: `3306`
+- **Username**: `root` (or `admin`)
+- **Password**: `root`
+- **Database / Schema**: `daily_task_manager`
+
+### Inspecting Data in MySQL Workbench:
+Open MySQL Workbench, connect with the credentials above, and run:
 ```sql
-CREATE DATABASE IF NOT EXISTS daily_task_manager;
-CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'root';
-ALTER USER 'admin'@'localhost' IDENTIFIED BY 'root';
-GRANT ALL PRIVILEGES ON daily_task_manager.* TO 'admin'@'localhost';
-FLUSH PRIVILEGES;
+USE daily_task_manager;
+SHOW TABLES;
+SELECT * FROM tasks;
 ```
 
-Set `DB_USERNAME` and `DB_PASSWORD` to the MySQL credentials if they differ
-from `admin` and `root`, then activate the MySQL profile:
+---
+
+## Local Backend & Dashboard Links
+
+Once the application is running:
+
+- **Web Dashboard**: [http://localhost:8080/](http://localhost:8080/)
+- **Backend Task API**: [http://localhost:8080/api/tasks](http://localhost:8080/api/tasks)
+
+### Task REST API Endpoints:
+- `GET /api/tasks` — List all tasks
+- `GET /api/tasks/{id}` — Get single task by ID
+- `POST /api/tasks` — Create a new task (JSON body: `{"title": "...", "description": "...", "completed": false}`)
+- `PUT /api/tasks/{id}` — Update task
+- `DELETE /api/tasks/{id}` — Delete task
+
+---
+
+## Run Locally
 
 ```powershell
-$env:SPRING_PROFILES_ACTIVE = "mysql"
+.\mvnw.cmd package -DskipTests
+java -jar target/daily-task-manager-0.0.1-SNAPSHOT.jar
+```
+
+Or run via Maven:
+```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-For the default local H2 database, run:
+---
 
-```powershell
-.\mvnw.cmd spring-boot:run
-```
+## Deploy to Render
 
-Run the command in a terminal. The app stays attached to that terminal; press
-`Ctrl+C` there to stop it.
+### Option 1: 1-Click Blueprint Deploy (Recommended)
+Click the badge below or visit:
+[https://render.com/deploy?repo=https://github.com/25ramcharan/daily-task-manager](https://render.com/deploy?repo=https://github.com/25ramcharan/daily-task-manager)
 
-## Task API
+Render will automatically parse `render.yaml` and deploy your Web Service.
 
-- `GET /api/tasks` — list tasks
-- `GET /api/tasks/{id}` — get one task
-- `POST /api/tasks` — create a task
-- `PUT /api/tasks/{id}` — update a task
-- `DELETE /api/tasks/{id}` — delete a task
-
-Task JSON fields are `title` (required), `description`, and `completed`.
+### Option 2: Render Dashboard Web Service
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **New +** -> **Web Service**
+3. Select your repository: `25ramcharan/daily-task-manager`
+4. Choose **Docker** environment (or **Java**)
+5. Set Health Check path to `/`
+6. Click **Create Web Service**
+7. Once deployment finishes, Render provides your live project URL (e.g. `https://daily-task-manager.onrender.com`).
