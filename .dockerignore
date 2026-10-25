@@ -1,0 +1,6 @@
+.git
+.mvn
+target
+data
+.vscode
+*.log

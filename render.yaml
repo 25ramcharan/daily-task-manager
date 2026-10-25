@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: daily-task-manager
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:h2:mem:daily_task_manager;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      - key: SPRING_DATASOURCE_USERNAME
+        value: sa
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ""
